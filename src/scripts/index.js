@@ -22,6 +22,8 @@ const profileDescription = document.querySelector('.profile__description');
 const formNewCard = document.querySelector(".popup__form[name='new-place']");
 const placeInput = formNewCard.querySelector(".popup__input_type_card-name");
 const linkInput = formNewCard.querySelector(".popup__input_type_url");
+const imageModalImage = document.querySelector(".popup__image");
+const captionModalImage = document.querySelector(".popup__caption");
 
 function renderCards() {
   initialCards.forEach((cardData) => {
@@ -30,7 +32,11 @@ function renderCards() {
   });
 }
 
-editButton.addEventListener('click', () => openModal(modalEdit));
+editButton.addEventListener('click', () => {
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
+  openModal(modalEdit);
+});
 
 addButton.addEventListener('click', () => openModal(modalAdd));
 
@@ -62,7 +68,7 @@ function addNewCard(evt) {
     name: placeInput.value,
     link: linkInput.value,
   };
-  const newCardElement = createCard(newCardData, (card) => card.remove(), toggleLike, openModalImage);
+  const newCardElement = createCard(newCardData, deleteCard, toggleLike, openModalImage);
   placesList.prepend(newCardElement);
   formNewCard.reset();
   closeModal(modalAdd);
@@ -70,15 +76,10 @@ function addNewCard(evt) {
 
 formNewCard.addEventListener("submit", addNewCard);
 
-function openModalImage(event) {
-  const imageUrl = event.target.src;
-  const imageAlt = event.target.alt;
-  const imageModalImage = document.querySelector(".popup__image");
-  const captionModalImage = document.querySelector(".popup__caption");
-
-  imageModalImage.src = imageUrl;
-  imageModalImage.alt = imageAlt;
-  captionModalImage.textContent = imageAlt;
+function openModalImage(link, name) {
+  imageModalImage.src = link;
+  imageModalImage.alt = name;
+  captionModalImage.textContent = name;
 
   openModal(modalImage);
 }

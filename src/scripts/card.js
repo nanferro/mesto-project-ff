@@ -12,7 +12,7 @@ export function createCard(cardData, deleteCallback, likeCallback, imageCallback
   
   deleteButton.addEventListener("click", () => deleteCallback(cardElement));
   likeButton.addEventListener("click", likeCallback);
-  cardImage.addEventListener("click", imageCallback);
+  cardImage.addEventListener("click", () => imageCallback(cardData.link, cardData.name));
   
   return cardElement;
 }
