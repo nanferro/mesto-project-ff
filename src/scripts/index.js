@@ -1,3 +1,6 @@
+import '../pages/index.css';
+import { initialCards } from './cards';
+
 const cardTemplate = document.querySelector("#card-template").content;
 const placesList = document.querySelector(".places__list");
 
@@ -26,3 +29,8 @@ initialCards.forEach((cardData) => {
   const cardElement = createCard(cardData, deleteCard);
   placesList.append(cardElement);
 });
+
+import avatar from '../images/avatar.jpg';
+
+const profileImage = document.querySelector('.profile__image');
+profileImage.style.backgroundImage = `url(${avatar})`;
