@@ -20,3 +20,14 @@
     line-height: 15px;
   }
 }
+
+.popup__input_type_error {
+  font-size: 12px;
+  line-height: 15px;
+  color: rgb(255, 0, 0);
+  opacity: 0;
+}
+
+.popup__input-error_active {
+  opacity: 1;
+}

@@ -10,7 +10,7 @@
   background: #000;
   border-radius: 2px;
   border: none;
-  transition: visibility 0s, background 0.3s;
+  transition: visibility 0s, background 0.3s, color 0.3s, border 0.3s;
   margin-top: 48px;
 }
 
@@ -19,9 +19,21 @@
   cursor: pointer;
 }
 
+.button_inactive.popup__button:hover {
+  background: none;
+  cursor: default;
+}
+
 @media screen and (max-width: 568px) {
   .popup__button {
     font-size: 14px;
     line-height: 17px;
   }
+}
+
+.button_inactive {
+  border: 1px solid rgba(0,0,0,.2);
+  color: rgba(0,0,0,.2);
+  background: none;
+  cursor: default;
 }

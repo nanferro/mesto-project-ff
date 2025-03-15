@@ -3,6 +3,7 @@ import avatar from '../images/avatar.jpg';
 import { createCard, deleteCard, toggleLike } from './card.js';
 import { openModal, closeModal, closeModalOnOverlay } from './modal.js';
 import { initialCards } from './cards'; 
+import { hideInputError, toggleButtonState, enableValidation, popupFormElement } from './validation.js';
 
 const profileImage = document.querySelector('.profile__image');
 profileImage.style.backgroundImage = `url(${avatar})`;
@@ -25,6 +26,8 @@ const linkInput = formNewCard.querySelector(".popup__input_type_url");
 const imageModalImage = document.querySelector(".popup__image");
 const captionModalImage = document.querySelector(".popup__caption");
 
+enableValidation();
+
 function renderCards() {
   initialCards.forEach((cardData) => {
     const cardElement = createCard(cardData, deleteCard, toggleLike, openModalImage);
@@ -32,18 +35,34 @@ function renderCards() {
   });
 }
 
+function clearValidationErrors(popupFormElement) {
+  const formList = Array.from(popupFormElement.querySelectorAll('.popup__input'));
+  formList.forEach((input) => hideInputError(popupFormElement, input));
+  toggleButtonState(formList, popupFormElement.querySelector('.popup__button'));
+}
+
 editButton.addEventListener('click', () => {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
+  clearValidationErrors(popupFormElement);
   openModal(modalEdit);
 });
 
-addButton.addEventListener('click', () => openModal(modalAdd));
+addButton.addEventListener('click', () => {
+  clearValidationErrors(popupFormElement);
+  openModal(modalAdd);
+  const inputList = Array.from(formNewCard.querySelectorAll('.popup__input'));
+  const buttonElement = formNewCard.querySelector('.popup__button');
+  toggleButtonState(inputList, buttonElement);
+});
 
 closeButtons.forEach((button) => {
   button.addEventListener('click', () => {
     const popup = button.closest('.popup');
     closeModal(popup);
+    if (popup === modalAdd) {
+      formNewCard.reset();
+    };
   });
 });
 
@@ -64,6 +83,7 @@ formElement.addEventListener('submit', editProfile);
 
 function addNewCard(evt) {
   evt.preventDefault();
+  const inputList = Array.from(formNewCard.querySelectorAll('.popup__input'));
   const newCardData = {
     name: placeInput.value,
     link: linkInput.value,
@@ -72,9 +92,18 @@ function addNewCard(evt) {
   placesList.prepend(newCardElement);
   formNewCard.reset();
   closeModal(modalAdd);
+  const buttonElement = formNewCard.querySelector('.popup__button');
+  toggleButtonState(inputList, buttonElement);
 }
 
 formNewCard.addEventListener("submit", addNewCard);
+
+formNewCard.addEventListener("reset", () => {
+  const inputList = Array.from(formNewCard.querySelectorAll('.popup__input'));
+  const buttonElement = formNewCard.querySelector('.popup__button');
+  inputList.forEach((inputElement) => hideInputError(formNewCard, inputElement));
+  toggleButtonState(inputList, buttonElement);
+});
 
 function openModalImage(link, name) {
   imageModalImage.src = link;
