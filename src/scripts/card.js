@@ -30,14 +30,6 @@ export function createCard(cardData, deleteCallback, likeCallback, imageCallback
   return cardElement;
 }
 
-export function deleteCard(cardId, cardElement) {
-  apiDeleteCard(cardId)
-    .then(() => {
-      cardElement.remove();
-    })
-    .catch(err => console.error("Ошибка удаления карточки:", err));
-}
-
 export function toggleLike(cardId, likeButton, likeCount) {
   const isLiked = likeButton.classList.contains("card__like-button_is-active");
   apiToggleLike(cardId, isLiked)

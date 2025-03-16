@@ -2,7 +2,7 @@ import '../pages/index.css';
 import avatar from '../images/avatar.jpg';
 import { createCard, toggleLike } from './card.js';
 import { openModal, closeModal, closeModalOnOverlay } from './modal.js';
-import { hideInputError, toggleButtonState, enableValidation, popupFormElement } from './validation.js';
+import { clearValidationErrors, toggleButtonState, enableValidation } from './validation.js';
 import { getUserInfo, getInitialCards, updateUserProfile, updateAvatar as apiUpdateAvatar, addNewCard as apiAddNewCard, deleteCard as apiDeleteCard } from './api.js';
 
 const profileImage = document.querySelector('.profile__image');
@@ -33,6 +33,18 @@ const confirmButton = modalConfirm.querySelector(".popup__button");
 let cardToDelete = null;
 let userId;
 
+const validationConfig ={
+  popupFormElement: '.popup__form',
+  popupInput: '.popup__input',
+  button: '.popup__button',
+  inactiveButton: 'button_inactive',
+  inputTypeError: 'popup__input_type_error',
+  inputActiveError: 'popup__input-error_active',
+  inputError: '.popup__input-error'
+};
+
+enableValidation(validationConfig);
+
 function loadData() {
   Promise.all([getUserInfo(), getInitialCards()])
     .then(([userData, cardsData]) => {
@@ -51,14 +63,6 @@ function renderCards(cards, userId) {
     const cardElement = createCard(cardData, openDeleteConfirm, toggleLike, openModalImage, userId);
     placesList.append(cardElement);
   });
-}
-
-enableValidation();
-
-function clearValidationErrors(popupFormElement) {
-  const formList = Array.from(popupFormElement.querySelectorAll('.popup__input'));
-  formList.forEach((input) => hideInputError(popupFormElement, input));
-  toggleButtonState(formList, popupFormElement.querySelector('.popup__button'));
 }
 
 const updateButtonState = (button, isLoading) => {
@@ -86,7 +90,9 @@ function editProfile(evt) {
 }
 
 editButton.addEventListener('click', () => {
-  clearValidationErrors(popupFormElement);
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent; 
+  clearValidationErrors(formElement, validationConfig);
   openModal(modalEdit);
 });
 
@@ -108,16 +114,17 @@ function addNewCard(evt) {
 }
 
 addButton.addEventListener('click', () => {
-  clearValidationErrors(popupFormElement);
+  clearValidationErrors(formNewCard, validationConfig);
   openModal(modalAdd);
   const inputList = Array.from(formNewCard.querySelectorAll('.popup__input'));
   const buttonElement = formNewCard.querySelector('.popup__button');
-  toggleButtonState(inputList, buttonElement);
+  toggleButtonState(inputList, buttonElement, validationConfig);
 });
 
 formNewCard.addEventListener("submit", addNewCard);
 
 profileImage.addEventListener('click', () => {
+  clearValidationErrors(formAvatar, validationConfig);
   openModal(modalAvatar);
 });
 
@@ -170,6 +177,10 @@ closeButtons.forEach((button) => {
       formNewCard.reset();
     };
   });
+});
+
+[modalEdit, modalAdd, modalImage, modalAvatar, modalConfirm].forEach(popup => {
+  popup.classList.add('popup_is-animated');
 });
 
 [modalEdit, modalAdd, modalImage, modalAvatar, modalConfirm].forEach(modal => {
