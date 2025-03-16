@@ -30,6 +30,7 @@ const formAvatar = document.querySelector(".popup__form[name='edit-avatar']");
 const avatarInput = formAvatar.querySelector(".popup__input_type_url");
 const modalConfirm = document.querySelector('.popup_type_confirm');
 const confirmButton = modalConfirm.querySelector(".popup__button");
+const modalsList = document.querySelectorAll('.popup');
 let cardToDelete = null;
 let userId;
 
@@ -188,12 +189,8 @@ closeButtons.forEach((button) => {
   });
 });
 
-[modalEdit, modalAdd, modalImage, modalAvatar, modalConfirm].forEach(popup => {
-  popup.classList.add('popup_is-animated');
-});
+modalsList.forEach(modal => modal.classList.add('popup_is-animated'));
 
-[modalEdit, modalAdd, modalImage, modalAvatar, modalConfirm].forEach(modal => {
-  closeModalOnOverlay(modal);
-});
+modalsList.forEach(closeModalOnOverlay);
 
 loadData();
