@@ -1,9 +1,9 @@
 import '../pages/index.css';
 import avatar from '../images/avatar.jpg';
-import { createCard, toggleLike } from './card.js';
+import { createCard, checkLikeStatus, updateLikeButton } from "./card.js";
 import { openModal, closeModal, closeModalOnOverlay } from './modal.js';
 import { clearValidationErrors, toggleButtonState, enableValidation } from './validation.js';
-import { getUserInfo, getInitialCards, updateUserProfile, updateAvatar as apiUpdateAvatar, addNewCard as apiAddNewCard, deleteCard as apiDeleteCard } from './api.js';
+import { getUserInfo, getInitialCards, updateUserProfile, updateAvatar as apiUpdateAvatar, addNewCard as apiAddNewCard, deleteCard as apiDeleteCard, toggleLike as apiToggleLike } from './api.js';
 
 const profileImage = document.querySelector('.profile__image');
 profileImage.style.backgroundImage = `url(${avatar})`;
@@ -55,6 +55,15 @@ function loadData() {
       renderCards(cardsData, userId);
     })
     .catch(err => console.error("Ошибка загрузки данных:", err));
+}
+
+function toggleLike(cardId, likeButton, likeCount) {
+  const isLiked = checkLikeStatus(likeButton);
+  apiToggleLike(cardId, isLiked)
+    .then(updatedCard => {
+      updateLikeButton(likeButton, likeCount, updatedCard.likes);
+    })
+    .catch(err => console.error("Ошибка при изменении лайка:", err));
 }
 
 function renderCards(cards, userId) {

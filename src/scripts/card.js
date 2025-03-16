@@ -1,5 +1,3 @@
-import { deleteCard as apiDeleteCard, toggleLike as apiToggleLike } from './api.js';
-
 export function createCard(cardData, deleteCallback, likeCallback, imageCallback, userId) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.cloneNode(true).querySelector(".card");
@@ -30,12 +28,11 @@ export function createCard(cardData, deleteCallback, likeCallback, imageCallback
   return cardElement;
 }
 
-export function toggleLike(cardId, likeButton, likeCount) {
-  const isLiked = likeButton.classList.contains("card__like-button_is-active");
-  apiToggleLike(cardId, isLiked)
-    .then(updatedCard => {
-      likeCount.textContent = updatedCard.likes.length;
-      likeButton.classList.toggle("card__like-button_is-active", !isLiked);
-    })
-    .catch(err => console.error("Ошибка при изменении лайка:", err));
+export function checkLikeStatus(likeButton) {
+  return likeButton.classList.contains("card__like-button_is-active");
+}
+
+export function updateLikeButton(likeButton, likeCount, updatedLikes) {
+  likeCount.textContent = updatedLikes.length;
+  likeButton.classList.toggle("card__like-button_is-active");
 }
